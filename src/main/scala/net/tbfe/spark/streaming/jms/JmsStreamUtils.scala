@@ -14,16 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.spark.streaming.jms
+package net.tbfe.spark.streaming.jms
 
-import javax.jms.Message
-
+import java.util.Properties
+import javax.jms._
+import javax.naming.InitialContext
+import org.apache.spark.Logging
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.dstream.ReceiverInputDStream
-
-import scala.concurrent.duration.{Duration, _}
+import org.apache.spark.streaming.jms._
+import org.apache.spark.streaming.receiver.{BlockGeneratorListener, Receiver}
+import scala.concurrent.duration._
 import scala.reflect.ClassTag
+
+
 
 object JmsStreamUtils {
 
@@ -96,3 +101,62 @@ object JmsStreamUtils {
 
   }
 }
+
+
+sealed trait JmsDestinationInfo {
+
+}
+
+case class QueueJmsDestinationInfo(queueName: String) extends JmsDestinationInfo
+
+case class DurableTopicJmsDestinationInfo(topicName: String,
+  subscriptionName: String) extends JmsDestinationInfo
+
+
+
+/**
+ * Build Jms objects from JNDI
+ *
+ * @param jndiProperties        Implementation specific. JNDI properties with setup for connection
+ *                              factory and destinations.
+ * @param destinationInfo       Queue or Topic destination info.
+ * @param connectionFactoryName Name of connection factory connfigured in JNDI
+ * @param messageSelector       Message selector. Use Empty string for no message filter.
+ */
+case class JndiMessageConsumerFactory(jndiProperties: Properties,
+  destinationInfo: JmsDestinationInfo,
+  connectionFactoryName: String = "ConnectionFactory",
+  messageSelector: String = "")
+  extends MessageConsumerFactory with Logging {
+
+  @volatile
+  @transient
+  var initialContext: InitialContext = _
+
+  override def makeConsumer(session: Session): MessageConsumer = {
+    destinationInfo match {
+      case DurableTopicJmsDestinationInfo(topicName, subName) =>
+        val dest = initialContext.lookup(topicName).asInstanceOf[Topic]
+        session.createDurableSubscriber(dest,
+          subName,
+          messageSelector,
+          false)
+      case QueueJmsDestinationInfo(qName: String) =>
+        val dest = initialContext.lookup(qName).asInstanceOf[Destination]
+        session.createConsumer(dest, messageSelector)
+    }
+  }
+
+  override def makeConnection: Connection = {
+    if (initialContext == null) {
+      initialContext = new InitialContext(jndiProperties)
+    }
+    val connectionFactory = initialContext
+      .lookup(connectionFactoryName).asInstanceOf[ConnectionFactory]
+
+    val createConnection: Connection = connectionFactory.createConnection()
+    createConnection
+  }
+
+}
+

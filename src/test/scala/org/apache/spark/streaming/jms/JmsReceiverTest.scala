@@ -1,5 +1,4 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ /* Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -21,16 +20,15 @@ import java.net.ServerSocket
 import java.util.{Properties, UUID}
 import javax.jms._
 import javax.naming.{Context, InitialContext}
-
-import org.apache.activemq.broker.BrokerService
+import net.tbfe.spark.streaming.jms._
 import org.apache.activemq.{ActiveMQConnectionFactory, ActiveMQSession}
+import org.apache.activemq.broker.BrokerService
 import org.apache.commons.lang3.RandomUtils
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Milliseconds, StreamingContext}
 import org.apache.spark.util.Utils
-import org.scalatest.concurrent.Eventually
 import org.scalatest.{BeforeAndAfter, FunSuite}
-
+import org.scalatest.concurrent.Eventually
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration
 import scala.language.postfixOps
@@ -61,7 +59,7 @@ class JmsReceiverTest extends FunSuite with BeforeAndAfter with Eventually {
 
     broker.setPersistent(false)
     val systemUsage = broker.getSystemUsage()
-    systemUsage.getTempUsage.setLimit(100 * 1024 * 1024)
+    systemUsage.getTempUsage.setLimit(100L * 1024L * 1024L)
     broker.addConnector(brokerUrl)
     broker.start()
     broker.waitUntilStarted()
@@ -143,7 +141,7 @@ class JmsReceiverTest extends FunSuite with BeforeAndAfter with Eventually {
 
   }
 
-  def testStopStart(sync: Boolean) {
+  def testStopStart(sync: Boolean) :Unit =  {
 
     val destName: String = "dynamicQueues/FOOO.BARR"
     val props = new Properties()
@@ -312,4 +310,8 @@ class JmsReceiverTest extends FunSuite with BeforeAndAfter with Eventually {
       (null, trialPort)
     }, new SparkConf())._2
   }
+
+
+
+
 }
