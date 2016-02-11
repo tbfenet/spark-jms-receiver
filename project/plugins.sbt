@@ -1,8 +1,5 @@
 logLevel := Level.Warn
 
-resolvers += Resolver.url(
-  "tpolecat-sbt-plugin-releases",
-  url("http://dl.bintray.com/content/tpolecat/sbt-plugin-releases"))(
-    Resolver.ivyStylePatterns)
+resolvers += "bintray-spark-packages" at "https://dl.bintray.com/spark-packages/maven/"
 
-addSbtPlugin("org.tpolecat" % "tut-plugin" % "0.4.0")
+addSbtPlugin("org.spark-packages" % "sbt-spark-package" % "0.2.3")

@@ -80,7 +80,7 @@ object JmsStreamUtils {
     * @param messageConverter    Function to map from Message type to T. Return None to filter out
     *                            message
     * @param acknowledgementMode Should either be Session.AUTO_ACKNOWLEDGE or a JMS providers code
-    *                            for individual acknowledgement. If set to Session.AUTO_ACKNOWLEDGE
+∏    *                            for individual acknowledgement. If set to Session.AUTO_ACKNOWLEDGE
     *                            then this receiver is not "Reliable"
     * @param storageLevel
     * @tparam T
@@ -159,4 +159,3 @@ case class JndiMessageConsumerFactory(jndiProperties: Properties,
   }
 
 }
-
