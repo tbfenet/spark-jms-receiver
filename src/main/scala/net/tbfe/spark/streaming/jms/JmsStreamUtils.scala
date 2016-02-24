@@ -102,13 +102,24 @@ object JmsStreamUtils {
   }
 }
 
-
+/**
+  * Either topic or queue
+  */
 sealed trait JmsDestinationInfo {
 
 }
 
+/**
+  *
+  * @param queueName
+  */
 case class QueueJmsDestinationInfo(queueName: String) extends JmsDestinationInfo
 
+/**
+  *
+  * @param topicName
+  * @param subscriptionName
+  */
 case class DurableTopicJmsDestinationInfo(topicName: String,
   subscriptionName: String) extends JmsDestinationInfo
 

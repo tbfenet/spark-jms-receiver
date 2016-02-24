@@ -222,7 +222,7 @@ class AsynchronousJmsReceiver[T](override val consumerFactory: MessageConsumerFa
     }
 
     def onPushBlock(blockId: StreamBlockId, arrayBuffer: mutable.ArrayBuffer[_]): Unit = {
-      val messages = arrayBuffer.map(_.asInstanceOf[Message])
+      val messages = arrayBuffer.asInstanceOf[mutable.ArrayBuffer[Message]]
       store(messages.flatMap(messageConverter(_)))
       messages.foreach(_.acknowledge())
     }
@@ -270,7 +270,7 @@ trait MessageConsumerFactory extends Serializable {
   }
 
   /**
-   * Over ride to make new connection
+   * Implement to make new connection
    *
    * @return
    */
