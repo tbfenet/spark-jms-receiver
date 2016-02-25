@@ -1,6 +1,6 @@
 name := "spark-jms-receiver"
 
-version := "0.1.0"
+version := "0.1.1"
 
 scalaVersion := "2.11.6"
 
@@ -8,7 +8,7 @@ scalaVersion := "2.11.6"
 
 crossScalaVersions := Seq("2.10.4","2.11.6")
 
-spName := "net.tbfe/spark-jms-receiver" 
+spName := "tbfenet/spark-jms-receiver"
 
 val sparkVer = "1.6.0"
 
