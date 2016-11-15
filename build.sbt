@@ -1,6 +1,6 @@
 name := "spark-jms-receiver"
 
-version := "0.1.2"
+version := "0.2.0"
 
 scalaVersion := "2.11.6"
 
@@ -10,7 +10,7 @@ crossScalaVersions := Seq("2.10.4","2.11.6")
 
 spName := "tbfenet/spark-jms-receiver"
 
-val sparkVer = "1.6.0"
+val sparkVer = "2.0.0"
 
 sparkVersion := sparkVer
 
@@ -32,3 +32,4 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 
 )
+

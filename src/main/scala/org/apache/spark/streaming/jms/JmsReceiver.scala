@@ -19,12 +19,19 @@ package org.apache.spark.streaming.jms
 import com.google.common.base.Stopwatch
 import java.util.concurrent._
 import javax.jms._
-import org.apache.spark.Logging
+import org.apache.spark.internal.Logging
 import org.apache.spark.storage.{StorageLevel, StreamBlockId}
 import org.apache.spark.streaming.receiver.{BlockGenerator, BlockGeneratorListener, Receiver}
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration._
+
+/**
+ * Trait used to expose the logging interface to the rest of this library.
+ *
+ * Simply grabs Logging, which is package-private, and exposes it by giving it another name.
+ */
+trait PublicLogging extends Logging
 
 /**
  * Reliable receiver for a JMS source
