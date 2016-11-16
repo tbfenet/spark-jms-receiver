@@ -18,6 +18,7 @@ package net.tbfe.spark.streaming.jms
 
 import java.util.Properties
 import javax.jms._
+import javax.naming.Context
 import javax.naming.InitialContext
 import org.apache.spark.streaming.jms.{ PublicLogging => Logging }
 import org.apache.spark.storage.StorageLevel
@@ -27,7 +28,7 @@ import org.apache.spark.streaming.jms._
 import org.apache.spark.streaming.receiver.{BlockGeneratorListener, Receiver}
 import scala.concurrent.duration._
 import scala.reflect.ClassTag
-
+import scala.collection.JavaConverters._
 
 
 object JmsStreamUtils {
@@ -165,7 +166,16 @@ case class JndiMessageConsumerFactory(jndiProperties: Properties,
     val connectionFactory = initialContext
       .lookup(connectionFactoryName).asInstanceOf[ConnectionFactory]
 
-    val createConnection: Connection = connectionFactory.createConnection()
+    val props = jndiProperties.asScala
+    val username = props.get(Context.SECURITY_PRINCIPAL)
+    val password = props.get(Context.SECURITY_CREDENTIALS)
+
+    val createConnection: Connection = (username, password) match {
+      case (Some(username), Some(password)) =>
+        connectionFactory.createConnection(username, password)
+      case _ =>
+        connectionFactory.createConnection()
+    }
     createConnection
   }
 
