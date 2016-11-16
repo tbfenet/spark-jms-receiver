@@ -18,8 +18,7 @@ package net.tbfe.spark.streaming.jms
 
 import java.util.Properties
 import javax.jms._
-import javax.naming.Context
-import javax.naming.InitialContext
+import javax.naming.{Context, InitialContext}
 import org.apache.spark.streaming.jms.{ PublicLogging => Logging }
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.StreamingContext
