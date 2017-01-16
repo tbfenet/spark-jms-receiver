@@ -2,15 +2,15 @@ name := "spark-jms-receiver"
 
 version := "0.2.1"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.8"
 
 //scalaVersion := "2.10.4"
 
-crossScalaVersions := Seq("2.10.4","2.11.6")
+crossScalaVersions := Seq("2.10.4","2.11.8")
 
 spName := "tbfenet/spark-jms-receiver"
 
-val sparkVer = "2.0.0"
+val sparkVer = "2.1.0"
 
 sparkVersion := sparkVer
 
